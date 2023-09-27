@@ -1,5 +1,6 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import Search from "../../../Pages/Search";
 import {
   fetchBrandsAsync,
   fetchCategoriesAsync,
@@ -25,12 +26,8 @@ const sortOptions = [
   { name: "Price: Low to High", sort: "price", order: "asc", current: false },
   { name: "Price: High to Low", sort: "price", order: "desc", current: false },
 ];
-
-// ... (previous imports and code)
-
 export default function ProductList() {
   const dispatch = useDispatch();
-
   const products = useSelector(selectAllProducts);
   const brands = useSelector(selectBrands);
   const categories = useSelector(selectCategories);
@@ -47,13 +44,11 @@ export default function ProductList() {
       options: brands,
     },
   ];
-
   const [filter, setFilter] = useState({});
   const [sort, setSort] = useState({});
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [searchCategory, setSearchCategory] = useState(""); // Add search category state
-
   const handleFilter = (e, section, option) => {
     const newFilter = { ...filter };
     if (e.target.checked) {
@@ -80,14 +75,6 @@ export default function ProductList() {
   const handlePage = (page) => {
     setPage(page);
   };
-
-  // const handleSearch = () => {
-  //   // Filter products based on the selected category
-  //   const searchFilter = searchCategory ? { category: searchCategory } : {};
-
-  //   // Update the filter and trigger the product fetch
-  //   setFilter({ ...filter, ...searchFilter });
-  // };
 
   useEffect(() => {
     const pagination = { _page: page, _limit: ITMES_PER_PAGE };
@@ -170,38 +157,16 @@ export default function ProductList() {
                 className="pb-24 pt-6"
               >
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-                  {/* Filters  for large device*/}
                   <DesktopFilter
                     handleFilter={handleFilter}
                     filters={filters}
                   ></DesktopFilter>
 
-                  {/* Product grid */}
                   <div className="lg:col-span-3">
                     <div className="relative">
                       <div className="flex items-center mt-4">
-                        <input
-                          type="text"
-                          placeholder="Search Products. . ."
-                          className="px-4 mb-5 py-2 w-48 sm:w-64 rounded-full border-2 border-gray-300 focus:ring focus:ring-indigo-200 focus:border-indigo-500"
-                          value={searchCategory}
-                          onChange={(e) => setSearchCategory(e.target.value)}
-                        />
-                        {/* <button
-                          className="ml-2 px-4 py-2 rounded-full bg-indigo-500 text-white"
-                          onClick={handleSearch}
-                        >
-                          Search
-                        </button> */}
+                        <Search />
                       </div>
-                      {searchCategory && (
-                        <button
-                          className="absolute top-0 right-0 mt-3 mr-4 text-gray-500 hover:text-red-500"
-                          onClick={() => setSearchCategory("")}
-                        >
-                          <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-                        </button>
-                      )}
                     </div>
                     <ProductGrid
                       products={products}
